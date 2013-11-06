@@ -45,7 +45,7 @@ public class StaticService implements INetworkDispatch {
 	}
 
 	public void spawnStatics() {
-		spawnPlanetStaticObjs("rori");
+		//spawnPlanetStaticObjs("rori");
 		spawnPlanetStaticObjs("naboo");
 		spawnPlanetStaticObjs("tatooine");
 	}

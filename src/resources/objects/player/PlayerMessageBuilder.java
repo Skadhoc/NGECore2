@@ -25,7 +25,7 @@ import java.nio.ByteOrder;
 import java.util.Map.Entry;
 
 import org.apache.mina.core.buffer.IoBuffer;
-
+import engine.resources.common.CRC;
 import resources.objects.ObjectMessageBuilder;
 import resources.objects.waypoint.WaypointObject;
 
@@ -374,6 +374,28 @@ public class PlayerMessageBuilder extends ObjectMessageBuilder {
 		return buffer;
 		
 	}
+	
+	public IoBuffer buildXPListDelta(String type, int amount, boolean alreadyExists) {
+		PlayerObject player = (PlayerObject) object;
+		player.setXpListUpdateCounter(player.getXpListUpdateCounter() + 1);
+		// Some problem with createDelta()
+		IoBuffer result = bufferPool.allocate(42 + type.length(), false).order(ByteOrder.LITTLE_ENDIAN);
+		result.putShort((short) 5);
+		result.putInt(CRC.StringtoCRC("BaselinesMessage"));
+		result.putLong(object.getContainer().getObjectID());
+		result.put("YALP".getBytes());
+		result.put((byte) 8);
+		result.putInt(19 + type.length());
+		result.putShort((short) 1);
+		result.putShort((short) 0);
+		result.putInt(1);
+		result.putInt(player.getXpListUpdateCounter());
+		result.put((byte) ((alreadyExists) ? 2 : 0));
+		result.putShort((short) type.length());
+		result.put(type.getBytes());
+		result.putInt(amount);
+		return result.flip();
+}
 	
 	public IoBuffer buildWaypointAddDelta(WaypointObject waypoint) {
 		

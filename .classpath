@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="ngengine_public.jar"/>
 	<classpathentry kind="lib" path="lib/mbassador-1.1.7.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jre7/lib/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

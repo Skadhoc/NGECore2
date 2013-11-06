@@ -25,8 +25,13 @@ import java.nio.ByteOrder;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
+import resources.common.Opcodes;
+
 public class ChatSystemMessage extends SWGMessage{
 
+	private String stfFilename;
+	private String stfName;
+	private int stat;
 	private String message;
 	private byte displayType;
 
@@ -36,24 +41,54 @@ public class ChatSystemMessage extends SWGMessage{
 		this.displayType = displayType;
 		
 	}
+
+	public ChatSystemMessage(String stfFilename, String stfName, int stat, byte displayType) {
+		this.stfFilename = stfFilename;
+		this.stfName = stfName;
+		this.stat = stat;
+		this.displayType = displayType;
 	
+}
 	public void deserialize(IoBuffer data) {
 		
 	}
 	
 	public IoBuffer serialize() {
-		
-		IoBuffer result = IoBuffer.allocate(15 + message.length() * 2).order(ByteOrder.LITTLE_ENDIAN);
-		
+	if 	(message != null){
+		IoBuffer result = IoBuffer.allocate(15 + message.length() * 2).order(ByteOrder.LITTLE_ENDIAN);		
 		result.putShort((short) 2);
-		result.putInt(0x6D2A6413);
-		
+		result.putInt(Opcodes.ChatSystemMessage);
 		result.put(displayType); // 0x00 = Chat and Screen // 0x02 = Chat only
 		result.put(getUnicodeString(message));
-		result.putInt(0); // unk
-
+		result.putInt(0);
 		return result.flip();
 		
+	} else {
+		IoBuffer result = IoBuffer.allocate(99 + stfFilename.length() + stfName.length()).order(ByteOrder.LITTLE_ENDIAN);
+		result.putShort((short) 4);
+		result.putInt(Opcodes.ChatSystemMessage);
+		result.put((byte) 0); //result.put((byte) displayType);  // 0x00 = Chat and Screen // 0x02 = Chat only
+		result.putInt(0);
+		result.putInt(54);
+		result.putShort((short) 0);
+		result.put((byte) 1);
+		result.putInt(-1);
+		result.put(getAsciiString(stfFilename));
+		result.putInt(0);
+		result.put(getAsciiString(stfName));
+		result.putInt(0);
+		result.putLong(0);
+		result.putLong(0);
+		result.putLong(0);
+		result.putLong(0);
+		result.putLong(0);
+		result.putLong(0);
+		result.putLong(0);
+		result.putInt(stat);
+		result.putInt(0);
+		result.put((byte) 0);
+		return result.flip();
+ }
 	}
 
 }
